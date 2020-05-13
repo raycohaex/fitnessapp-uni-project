@@ -15,23 +15,15 @@
       // print_r($this->getUrl());
       $url = $this->getUrl();
 
-
-
-
       //bestaat controller
       if(file_exists('../controllers/' . ucwords($url[0]) . '.php')) {
         $this->currentController = ucwords($url[0]);
         unset($url[0]);
       }
 
-
-
-
-      //require default controller
+      //require huidige controller
       require_once '../app/controllers/' . $this->currentController . '.php';
       $this->currentController = new $this->currentController;
-
-
 
       // Method uit URL
       if(isset($url[1])){
@@ -42,15 +34,8 @@
         }
       }
 
-
-
-
-
       // Parameters uit url
       $this->params = $url ? array_values($url) : [];
-
-
-
 
       call_user_func_array(
         [$this->currentController, $this->currentMethod], 

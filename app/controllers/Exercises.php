@@ -1,13 +1,15 @@
 <?php 
   class Exercises extends Controller {
     public function __construct() {
-      $this->postModel = $this->model('Exercise');
+      $this->exerciseModel = $this->model('Exercise');
     }
 
     public function index() {
+      $exercises = $this->exerciseModel->getExercises();
+
       $data = [
-        'title' => 'homepagina'
+        'exercises' => $exercises
       ];
-      $this->view('index', $data);
+      $this->view('exercises/index', $data);
     }
   }
