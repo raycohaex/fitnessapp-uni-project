@@ -6,4 +6,5 @@ Er is een lijst met oefeningen die je kunt toevoegen aan je sportschema.
 <ul>
 <li>☎ Test commit</li>
 <li>💄 Styling</li>
+<li>🛠 Back-end</li>
 </ul>
