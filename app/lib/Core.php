@@ -15,11 +15,14 @@
       // print_r($this->getUrl());
       $url = $this->getUrl();
 
+
+
       //bestaat controller
-      if(file_exists('../controllers/' . ucwords($url[0]) . '.php')) {
+      if(file_exists( APPROOT . '/controllers/' . ucwords($url[0]) . '.php')) {
         $this->currentController = ucwords($url[0]);
         unset($url[0]);
       }
+
 
       //require huidige controller
       require_once '../app/controllers/' . $this->currentController . '.php';
