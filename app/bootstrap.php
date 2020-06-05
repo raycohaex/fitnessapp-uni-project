@@ -1,9 +1,10 @@
 <?php
+error_reporting(E_ALL);
 // laad config
 require_once('config/config.php');
 
 // Laad lib(raries)
-require_once 'helpers/redirecter.php';
+require_once 'functions/redirecter.php';
 // require_once('lib/core.php');
 // require_once('lib/controller.php');
 // require_once('lib/database.php');

@@ -1,23 +1,32 @@
 <?php
-  /* 
-   * default controller
-   * Laadt models & views
-   */
-  class Controller {
+/*
+ * default controller
+ * Laadt DAL & views
+ */
+
+declare(strict_types=1);
+
+class Controller
+{
+
+    public array $data = [];
+
     // model
-    public function model($model) {
-      // require model
-      require_once '../app/models/' . $model . '.php';
-      return new $model();
+    public function model($model) : object
+    {
+        // require model
+        require_once '../app/DAL/' . $model . '.php';
+        return new $model();
     }
 
     //view
-    public function view($view, $data = []) {
-      // check view bestand
-      if(file_exists('../app/views/' . $view . '.php')) {
-        require_once '../app/views/' . $view . '.php';
-      } else {
-        die('Er is iets fout gegaan (view bestaat niet)');
-      }
+    public function view($view, $data = []) : void
+    {
+        // check view bestand
+        if (file_exists('../app/views/' . $view . '.php')) {
+            require '../app/views/' . $view . '.php';
+        } else {
+            die('Er is iets fout gegaan (view bestaat niet)');
+        }
     }
-  }
+}

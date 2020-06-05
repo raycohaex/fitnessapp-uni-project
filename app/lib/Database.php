@@ -6,18 +6,21 @@
 ** Waardes binden aan statements
 ** Rows en results doorgeven.
 */
+declare(strict_types=1);
 
 class Database {
-  private $dbhost = DB_HOST;
-  private $dbuser = DB_USER;
-  private $dbpass = DB_PASS;
-  private $dbname = DB_NAME;
+    private string $dbhost = DB_HOST;
+    private string $dbuser = DB_USER;
+    private string $dbpass = DB_PASS;
+    private string $dbname = DB_NAME;
 
-  private $dbhandler;
-  private $stmt;
-  private $error;
+    private PDO $dbhandler;
+    private PDOStatement $stmt;
+    private string $error = "";
 
-  public function __construct() 
+    private string $dsn;
+
+  public function __construct()
   {
     // dsn = data source name
     $dsn = 'mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname;
@@ -32,7 +35,7 @@ class Database {
       $this->dbhandler = new PDO($dsn, $this->dbuser, $this->dbpass, $options);
     } catch(PDOException $e) {
       $this->error = $e->getMessage();
-      echo $this->error;
+      return $this->error;
     }
   }
 
