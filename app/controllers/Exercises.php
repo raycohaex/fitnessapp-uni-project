@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require(APPROOT . '/models/ExerciseBBL.php');
+
 class Exercises extends Controller
 {
     public array $data;
@@ -9,13 +11,14 @@ class Exercises extends Controller
 
     public function __construct()
     {
-        $this->exerciseModel = $this->model('Exercise');
+
     }
 
 
     public function index(): void
     {
-        $exercises = $this->exerciseModel->getExercises();
+        $this->exercise = new ExerciseBBL();
+        $exercises = $this->exercise->getAllExercises();
         $data = [
             'exercises' => $exercises
         ];
@@ -25,7 +28,8 @@ class Exercises extends Controller
 
     public function show($id): void
     {
-        $exercise = $this->exerciseModel->getExerciseById($id);
+        $this->exercise = new ExerciseBBL();
+        $exercise = $this->exercise->getSingleExercise($id);
         $data = [
             'exercise' => $exercise
         ];
@@ -35,6 +39,7 @@ class Exercises extends Controller
 
     public function add(): void
     {
+        // Routing method that stays in the presentation layer, has no connection to the logic.
         $data = [
             'name' => '',
             'description' => ''
@@ -46,7 +51,7 @@ class Exercises extends Controller
 
     public function edit($id): void
     {
-        $exercise = $this->exerciseModel->getExerciseById($id);
+        $exercise = $this->exercise->getSingleExercise($id);
         $data = [
             'id' => $id,
             'name' => $exercise->name,
@@ -62,31 +67,11 @@ class Exercises extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            $data = [
-                'name' => trim($_POST['name']),
-                'description' => trim($_POST['description']),
-                'name_err' => '',
-                'description_err' => ''
-            ];
+            $name = trim($_POST['name']);
+            $description = trim($_POST['description']);
 
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Geef een naam op';
-            }
-
-            if (empty($data['description'])) {
-                $data['description_err'] = 'Geef een beschrijving op';
-            }
-
-            if (empty($data['name_err']) && empty($data['description_err'])) {
-                //success
-                if ($this->exerciseModel->addExercise($data)) {
-                    redirect('exercises');
-                } else {
-                    die('error pagina');
-                }
-            } else {
-                $this->view('exercises/add', $data);
-            }
+            $this->exercise = new ExerciseBBL($name, $description);
+            $this->exercise->save();
         }
     }
 
@@ -114,7 +99,7 @@ class Exercises extends Controller
 
             if (empty($data['name_err']) && empty($data['description_err'])) {
                 //success
-                if ($this->exerciseModel->patchExercise($data)) {
+                if ($this->exercise->patchExercise($data)) {
                     redirect('exercises');
                 } else {
                     die('error pagina');

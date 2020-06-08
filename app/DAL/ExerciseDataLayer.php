@@ -1,7 +1,14 @@
 <?php
 declare(strict_types=1);
 
-class Exercise
+interface IExerciseDal
+{
+    public function getExercises();
+    public function getExerciseById($id);
+    public function addExercise($data);
+}
+
+class ExerciseDataLayer extends Database implements IExerciseDal
 {
     private Database $db;
 

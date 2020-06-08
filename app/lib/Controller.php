@@ -15,7 +15,7 @@ class Controller
     public function model($model) : object
     {
         // require model
-        require_once '../app/DAL/' . $model . '.php';
+        require_once '../app/models/' . $model . '.php';
         return new $model();
     }
 
