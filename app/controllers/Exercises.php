@@ -1,5 +1,16 @@
 <?php
 declare(strict_types=1);
+namespace app\controllers;
+
+use app\lib\Controller;
+use app\applicatie\ExerciseBLL;
+use app\DAL\ExerciseDataLayer;
+use app\applicatie\IExerciseBLL;
+use app\applicatie\ExerciseformBLL;
+use app\applicatie\IExerciseformBLL;
+use app\DAL\ExerciseformDataLayer;
+use app\applicatie\ExerciseModel;
+
 
 class Exercises extends Controller
 {

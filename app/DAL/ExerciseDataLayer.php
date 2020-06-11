@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+namespace app\DAL;
+use app\lib\Database;
+
 class ExerciseDataLayer extends Database implements IExerciseDataLayer
 {
     private Database $db;

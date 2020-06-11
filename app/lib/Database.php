@@ -7,6 +7,9 @@
 ** Rows en results doorgeven.
 */
 declare(strict_types=1);
+namespace app\lib;
+use \PDO;
+use \PDOStatement;
 
 class Database {
     private string $dbhost = DB_HOST;

@@ -1,4 +1,6 @@
 <?php
+namespace app\DAL;
+
 interface IExerciseDataLayer
 {
     public function getExercises();

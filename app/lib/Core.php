@@ -5,6 +5,9 @@
 *  URL format /{controller}/{method}/{parameters}
 */
 declare(strict_types=1);
+namespace app\lib;
+use app\controllers\Exercises;
+use app\lib\Controller;
 
 class Core
 {
@@ -28,7 +31,10 @@ class Core
 
         //require huidige controller
         require_once '../app/controllers/' . $this->currentController . '.php';
-        $this->currentController = new $this->currentController();
+        if($this->currentController == 'Exercises'){
+            $this->currentController = new Exercises();
+        }
+
 
         // Method uit URL
         if (isset($url[1])) {

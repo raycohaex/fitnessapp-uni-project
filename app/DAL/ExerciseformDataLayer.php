@@ -1,6 +1,8 @@
 <?php
-
 declare(strict_types=1);
+
+namespace app\DAL;
+use app\lib\Database;
 
 class ExerciseformDataLayer extends Database implements IExerciseformDataLayer
 {

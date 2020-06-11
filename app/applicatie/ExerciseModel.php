@@ -1,5 +1,9 @@
 <?php
-class ExerciseModel
+declare(strict_types=1);
+namespace app\applicatie;
+use app\DAL\IExerciseDataLayer;
+
+class ExerciseModel implements IExerciseModel
 {
     private IExerciseDataLayer $exerciseDAL;
     private string $name;

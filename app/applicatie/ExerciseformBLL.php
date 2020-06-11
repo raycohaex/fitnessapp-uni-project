@@ -1,4 +1,8 @@
 <?php
+declare(strict_types=1);
+namespace app\applicatie;
+use app\DAL\IExerciseformDataLayer;
+
 class ExerciseformBLL implements IExerciseformBLL {
     private IExerciseformDataLayer $exerciseformDAL;
 

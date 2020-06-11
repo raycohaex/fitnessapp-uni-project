@@ -1,4 +1,8 @@
 <?php
+declare(strict_types=1);
+namespace app\applicatie;
+use app\DAL\IExerciseDataLayer;
+
 class ExerciseBLL extends ExerciseModel implements IExerciseBLL {
     private object $validationData;
     private IExerciseDataLayer $exerciseDAL;

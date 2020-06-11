@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 require_once('config/config.php');
 
 // Laad lib(raries)
-require_once 'functions/redirecter.php';
+//require_once 'functions/redirecter.php';
 require_once(APPROOT . '/lib/Core.php');
 require_once(APPROOT . '/lib/Controller.php');
 require_once(APPROOT . '/lib/Database.php');
@@ -25,7 +25,7 @@ require_once(APPROOT . '/DAL/ExerciseformDataLayer.php');
 
 // autoload alle benodigde bestanden
 //spl_autoload_register(function($className){
-//  include APPROOT . '/' . $className . '.php';
+//  include $className . '.php';
 //});
 
 
