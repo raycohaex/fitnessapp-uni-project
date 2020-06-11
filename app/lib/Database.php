@@ -68,6 +68,12 @@ class Database {
     return $this->stmt->execute();
   }
 
+  // return ID of inserted row, important for joining
+  public function lastInsertId()
+  {
+      return $this->dbhandler->lastInsertId();
+  }
+
   // results array
   public function resultSet() {
     $this->execute();

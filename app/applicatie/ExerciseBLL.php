@@ -1,7 +1,5 @@
 <?php
-
-
-class ExerciseMethods extends ExerciseModel {
+class ExerciseBLL extends ExerciseModel implements IExerciseBLL {
     private object $validationData;
     private IExerciseDataLayer $exerciseDAL;
 

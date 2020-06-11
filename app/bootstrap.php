@@ -11,11 +11,17 @@ require_once(APPROOT . '/lib/Database.php');
 
 //interfaces
 require_once(APPROOT . '/DAL/IExerciseDataLayer.php');
+require_once(APPROOT . '/DAL/IExerciseformDataLayer.php');
+require_once(APPROOT . '/applicatie/IExerciseBLL.php');
+require_once(APPROOT . '/applicatie/IExerciseformBLL.php');
+require_once(APPROOT . '/applicatie/IExerciseModel.php');
 
 //classes
 require_once(APPROOT . '/applicatie/ExerciseModel.php');
-require_once(APPROOT . '/applicatie/ExerciseMethods.php');
+require_once(APPROOT . '/applicatie/ExerciseBLL.php');
+require_once(APPROOT . '/applicatie/ExerciseformBLL.php');
 require_once(APPROOT . '/DAL/ExerciseDataLayer.php');
+require_once(APPROOT . '/DAL/ExerciseformDataLayer.php');
 
 // autoload alle benodigde bestanden
 //spl_autoload_register(function($className){

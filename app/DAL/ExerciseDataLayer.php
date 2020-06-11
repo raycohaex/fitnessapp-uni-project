@@ -30,7 +30,7 @@ class ExerciseDataLayer extends Database implements IExerciseDataLayer
     }
 
 
-    public function addExercise($data) : bool
+    public function addExercise($data) : int
     {
         $this->db->query('INSERT INTO `exercises` (`name`, `description`, `repetitions`, `sets`) VALUES (:name, :description, :repetitions, :sets)');
 
@@ -40,9 +40,13 @@ class ExerciseDataLayer extends Database implements IExerciseDataLayer
         $this->db->bind(':sets', $data['sets']);
 
         if ($this->db->execute()) {
-            return true;
+            if(is_numeric($this->db->lastInsertId())){
+                return $this->db->lastInsertId() + 0;
+            } else {
+                return 0;
+            }
         } else {
-            return false;
+            return 0;
         }
     }
 

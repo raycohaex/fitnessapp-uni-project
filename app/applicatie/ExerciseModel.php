@@ -32,7 +32,7 @@ class ExerciseModel
     public function getExerciseSets() { return $this->sets; }
 
 
-    public function addExercise() : bool
+    public function addExercise() : int
     {
         try {
             $data = [
@@ -41,13 +41,14 @@ class ExerciseModel
                 'repetitions' => $this->repetitions,
                 'sets' => $this->sets
             ];
-            $this->exerciseDAL->addExercise($data);
-            return true;
+            return $this->exerciseDAL->addExercise($data);
         }
         catch (Exception $e) {
-            return false;
+            return 0;
         }
     }
+
+
 
     public function validateExercise(): array
     {
