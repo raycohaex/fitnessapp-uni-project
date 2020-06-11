@@ -28,7 +28,7 @@ class Core
 
         //require huidige controller
         require_once '../app/controllers/' . $this->currentController . '.php';
-        $this->currentController = new $this->currentController;
+        $this->currentController = new $this->currentController();
 
         // Method uit URL
         if (isset($url[1])) {

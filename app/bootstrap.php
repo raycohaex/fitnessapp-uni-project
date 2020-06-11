@@ -5,11 +5,21 @@ require_once('config/config.php');
 
 // Laad lib(raries)
 require_once 'functions/redirecter.php';
- require_once('lib/core.php');
- require_once('lib/controller.php');
- require_once('lib/database.php');
+require_once(APPROOT . '/lib/Core.php');
+require_once(APPROOT . '/lib/Controller.php');
+require_once(APPROOT . '/lib/Database.php');
+
+//interfaces
+require_once(APPROOT . '/DAL/IExerciseDataLayer.php');
+
+//classes
+require_once(APPROOT . '/applicatie/ExerciseModel.php');
+require_once(APPROOT . '/applicatie/ExerciseMethods.php');
+require_once(APPROOT . '/DAL/ExerciseDataLayer.php');
 
 // autoload alle benodigde bestanden
 //spl_autoload_register(function($className){
-//  require_once('lib/' . $className . '.php');
+//  include APPROOT . '/' . $className . '.php';
 //});
+
+

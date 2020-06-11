@@ -1,24 +1,23 @@
 <?php
+
 declare(strict_types=1);
 
-require(APPROOT . '/models/ExerciseBBL.php');
 
 class Exercises extends Controller
 {
     public array $data;
     private object $exercise;
-    private object $exercises;
+    private ExerciseMethods $exerciseBLL; // moet interface worden
 
     public function __construct()
     {
-
+        $this->exerciseBLL = new ExerciseMethods(new ExerciseDataLayer());
     }
 
 
     public function index(): void
     {
-        $this->exercise = new ExerciseBBL();
-        $exercises = $this->exercise->getAllExercises();
+        $exercises = $this->exerciseBLL->getAllExercises();
         $data = [
             'exercises' => $exercises
         ];
@@ -28,8 +27,7 @@ class Exercises extends Controller
 
     public function show($id): void
     {
-        $this->exercise = new ExerciseBBL();
-        $exercise = $this->exercise->getSingleExercise($id);
+        $exercise = $this->exerciseBLL->getSingleExercise($id);
         $data = [
             'exercise' => $exercise
         ];
@@ -42,7 +40,9 @@ class Exercises extends Controller
         // Routing method that stays in the presentation layer, has no connection to the logic.
         $data = [
             'name' => '',
-            'description' => ''
+            'description' => '',
+            'repetitions' => '',
+            'sets' => ''
         ];
 
         $this->view('exercises/add', $data);
@@ -51,11 +51,13 @@ class Exercises extends Controller
 
     public function edit($id): void
     {
-        $exercise = $this->exercise->getSingleExercise($id);
+        $exercise = $this->exerciseBLL->getSingleExercise($id);
         $data = [
             'id' => $id,
             'name' => $exercise->name,
-            'description' => $exercise->description
+            'description' => $exercise->description,
+            'repetitions' => $exercise->repetitions,
+            'sets' => $exercise->sets
         ];
 
         $this->view('exercises/edit', $data);
@@ -69,9 +71,32 @@ class Exercises extends Controller
 
             $name = trim($_POST['name']);
             $description = trim($_POST['description']);
+            $repetitions = (is_numeric($_POST['repetitions']) ? (int)$_POST['repetitions'] : 0);
+            $sets = (is_numeric($_POST['sets']) ? (int)$_POST['sets'] : 0);
 
-            $this->exercise = new ExerciseBBL($name, $description);
-            $this->exercise->save();
+            // Create new object from ExerciseModel
+            $newExercise = new ExerciseModel(new ExerciseDataLayer(), $name, $description, $repetitions, $sets);
+
+            // validate ExerciseModel in ExericseBLL
+            $validateExercise = $newExercise->validateExercise();
+
+            if ($validateExercise['valid'] == true) {
+                $result = $newExercise->addExercise();
+                if ($result === true) {
+                    redirect('index');
+                }
+            } else {
+                if ($validateExercise['descriptionErr']) {
+                    $data['description_err'] = $validateExercise['descriptionErr'];
+                }
+                if ($validateExercise['nameErr']) {
+                    $data['name_err'] = $validateExercise['nameErr'];
+                }
+                $data['name'] = $newExercise->getExerciseName();
+                $data['description'] = $newExercise->getExerciseDescription();
+
+                $this->view('exercises/add', $data);
+            }
         }
     }
 
@@ -81,30 +106,32 @@ class Exercises extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-            $data = [
-                'id' => $id,
-                'name' => trim($_POST['name']),
-                'description' => trim($_POST['description']),
-                'name_err' => '',
-                'description_err' => ''
-            ];
+            $name = trim($_POST['name']);
+            $description = trim($_POST['description']);
+            $repetitions = (is_numeric($_POST['repetitions']) ? (int)$_POST['repetitions'] : 0);
+            $sets = (is_numeric($_POST['sets']) ? (int)$_POST['sets'] : 0);
 
-            if (empty($data['name'])) {
-                $data['name_err'] = 'Geef een naam op';
-            }
 
-            if (empty($data['description'])) {
-                $data['description_err'] = 'Geef een beschrijving op';
-            }
+            $editExercise = new ExerciseModel(new ExerciseDataLayer(), $name, $description, $repetitions, $sets, $id);
 
-            if (empty($data['name_err']) && empty($data['description_err'])) {
-                //success
-                if ($this->exercise->patchExercise($data)) {
-                    redirect('exercises');
-                } else {
-                    die('error pagina');
+            // validate ExerciseModel in ExericseBLL
+            $validateExercise = $editExercise->validateExercise();
+
+            if ($validateExercise['valid'] == true) {
+                $result = $editExercise->patchExercise();
+                if ($result === true) {
+                    redirect('index');
                 }
             } else {
+                if ($validateExercise['descriptionErr']) {
+                    $data['description_err'] = $validateExercise['descriptionErr'];
+                }
+                if ($validateExercise['nameErr']) {
+                    $data['name_err'] = $validateExercise['nameErr'];
+                }
+                $data['name'] = $editExercise->getExerciseName();
+                $data['description'] = $editExercise->getExerciseDescription();
+
                 $this->view('exercises/edit', $data);
             }
         }

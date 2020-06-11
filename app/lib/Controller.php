@@ -3,8 +3,8 @@
  * default controller
  * Laadt DAL & views
  */
-
 declare(strict_types=1);
+
 
 class Controller
 {
@@ -15,7 +15,7 @@ class Controller
     public function model($model) : object
     {
         // require model
-        require_once '../app/models/' . $model . '.php';
+        require_once '../app/applicatie/' . $model . '.php';
         return new $model();
     }
 

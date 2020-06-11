@@ -1,14 +1,7 @@
 <?php
 declare(strict_types=1);
 
-interface IExerciseDal
-{
-    public function getExercises();
-    public function getExerciseById($id);
-    public function addExercise($data);
-}
-
-class ExerciseDataLayer extends Database implements IExerciseDal
+class ExerciseDataLayer extends Database implements IExerciseDataLayer
 {
     private Database $db;
 
@@ -24,14 +17,14 @@ class ExerciseDataLayer extends Database implements IExerciseDal
 
     public function getExercises() : array
     {
-        $this->db->query('SELECT `id`, `name`, `description` FROM exercises');
+        $this->db->query('SELECT `id`, `name`, `description`, `repetitions`, `sets` FROM exercises');
         return $this->db->resultSet();
     }
 
 
     public function getExerciseById($id) : object
     {
-        $this->db->query('SELECT `id`, `name`, `description` FROM `exercises` WHERE id = :id');
+        $this->db->query('SELECT `id`, `name`, `description`, `repetitions`, `sets` FROM `exercises` WHERE id = :id');
         $this->db->bind(':id', $id);
         return $this->db->single();
     }
@@ -39,9 +32,12 @@ class ExerciseDataLayer extends Database implements IExerciseDal
 
     public function addExercise($data) : bool
     {
-        $this->db->query('INSERT INTO `exercises` (name) VALUES (:name)');
+        $this->db->query('INSERT INTO `exercises` (`name`, `description`, `repetitions`, `sets`) VALUES (:name, :description, :repetitions, :sets)');
 
         $this->db->bind(':name', $data['name']);
+        $this->db->bind(':description', $data['description']);
+        $this->db->bind(':repetitions', $data['repetitions']);
+        $this->db->bind(':sets', $data['sets']);
 
         if ($this->db->execute()) {
             return true;
@@ -53,10 +49,12 @@ class ExerciseDataLayer extends Database implements IExerciseDal
 
     public function patchExercise($data) : bool
     {
-        $this->db->query('UPDATE `exercises` SET name=:name, description=:description WHERE id=:id');
+        $this->db->query('UPDATE `exercises` SET name=:name, description=:description, repetitions=:repetitions, sets=:sets WHERE id=:id');
 
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':description', $data['description']);
+        $this->db->bind(':repetitions', $data['repetitions']);
+        $this->db->bind(':sets', $data['sets']);
         $this->db->bind(':id', $data['id']);
 
         if ($this->db->execute()) {
