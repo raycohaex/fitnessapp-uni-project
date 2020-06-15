@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace app\DAL;
 use app\lib\Database;
+use mysql_xdevapi\Exception;
 
 class ExerciseDataLayer extends Database implements IExerciseDataLayer
 {
@@ -10,18 +11,23 @@ class ExerciseDataLayer extends Database implements IExerciseDataLayer
 
     public function __construct()
     {
-        try {
-            $this->db = new Database();
-        } catch (PDOException $ex) {
-            exit("Fout bij het maken van een database connectie");
-        }
+           try {
+               $this->db = new Database();
+           }
+           catch (\PDOException $e){
+               throw new \PDOException('Kan niet verbinden met de database');
+           }
     }
 
 
     public function getExercises() : array
     {
-        $this->db->query('SELECT `id`, `name`, `description`, `repetitions`, `sets` FROM exercises');
-        return $this->db->resultSet();
+        try {
+            $this->db->query('SELECT `id`, `name`, `description`, `repetitions`, `sets` FROM exercises');
+            return $this->db->resultSet();
+        } catch (\PDOException $e) {
+            throw new \PDOException('kan oefeningen niet ophalen uit de database.');
+        }
     }
 
 

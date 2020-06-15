@@ -12,8 +12,8 @@ class ExerciseformDataLayer extends Database implements IExerciseformDataLayer
     {
         try {
             $this->db = new Database();
-        } catch (PDOException $ex) {
-            exit("Fout bij het maken van een database connectie");
+        } catch (\PDOException $ex) {
+            throw new \PDOException('Kan niet verbinden met de database');
         }
     }
 

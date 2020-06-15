@@ -21,25 +21,47 @@ class Exercises extends Controller
 
     public function __construct()
     {
-        $this->exerciseBLL = new ExerciseBLL(new ExerciseDataLayer());
-        $this->exerciseformBLL = new ExerciseformBLL(new ExerciseformDataLayer());
+        try {
+            $this->exerciseBLL = new ExerciseBLL(new ExerciseDataLayer());
+            $this->exerciseformBLL = new ExerciseformBLL(new ExerciseformDataLayer());
+        }
+        catch (\PDOException $e) {
+            // stuur door naar een van de error pagina's aangezien het een fatal error is.
+            $this->view('errors/error_db');
+        }
     }
 
 
     public function index(): void
     {
         $exercises = $this->exerciseBLL->getAllExercises();
-        $data = [
-            'exercises' => $exercises
-        ];
-        $this->view('exercises/index', $data);
+        if($exercises['error'] !== NULL) {
+            $this->view('exercises/error', $exercises['error']);
+            exit;
+        } else {
+            $data = [
+                'exercises' => $exercises['exercises']
+            ];
+            $this->view('exercises/index', $data);
+        }
     }
 
 
-    public function show($id): void
+    public function show($id = NULL): void
     {
-        $exerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
-        $exercise = $this->exerciseBLL->getSingleExercise($id);
+        try {
+            $exerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
+            $exercise = $this->exerciseBLL->getSingleExercise($id);
+        } catch (\Error $e) {
+            $data = [
+                'error' => [
+                    'title' => 'Oefening niet gevonden',
+                    'description' => 'De opgegeven oefening kan niet worden gevonden.'
+                ]
+            ];
+            $this->view('exercises/error', $data);
+            exit;
+        }
         $data = [
             'exercise' => $exercise,
             'exerciseform' => $exerciseform
@@ -65,12 +87,20 @@ class Exercises extends Controller
     }
 
 
-    public function edit($id): void
+    public function edit(int $id = NULL): void
     {
-        $selectedExerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
-        $exerciseforms = $this->exerciseformBLL->getAllExcerciseforms();
+        try {
+            $selectedExerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
+            $exerciseforms = $this->exerciseformBLL->getAllExcerciseforms();
+            $exercise = $this->exerciseBLL->getSingleExercise($id);
+        } catch (\Error $e) {
+            $data = [
+                'error' => 'Oefening bestaat niet'
+            ];
+            $this->view('exercises/error', $data);
+            exit;
+        }
 
-        $exercise = $this->exerciseBLL->getSingleExercise($id);
         $data = [
             'id' => $id,
             'name' => $exercise->name,

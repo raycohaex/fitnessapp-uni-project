@@ -12,11 +12,25 @@ class ExerciseBLL extends ExerciseModel implements IExerciseBLL {
         $this->exerciseDAL = $dal;
     }
 
+
     public function getAllExercises() : array
     {
-        return $this->exerciseDAL->getExercises();
+        try {
+            $result = $this->exerciseDAL->getExercises();
+            return [
+                'exercises'=> $result,
+                'error' => NULL
+            ];
+        } catch (\PDOException $e) {
+            return [
+                'exercises'=> '',
+                'error' => [
+                    'title' => 'Kan oefeningen niet ophalen',
+                    'description' => 'Op dit moment kunnen er geen oefeningen worden opgehaald. Probeer het later opnieuw.'
+                ]
+            ];
+        }
 
-        // verwerk data voor view
     }
 
     public function getSingleExercise($id) : object {

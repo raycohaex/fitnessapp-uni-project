@@ -8,6 +8,7 @@
 */
 declare(strict_types=1);
 namespace app\lib;
+use mysql_xdevapi\Exception;
 use \PDO;
 use \PDOStatement;
 
@@ -26,25 +27,29 @@ class Database {
   public function __construct()
   {
     // dsn = data source name
-    $dsn = 'mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname;
+    $this->dsn = 'mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname;
     // https://www.php.net/manual/en/pdo.setattribute.php
-    $options = array(
+    $this->options = array(
       PDO::ATTR_PERSISTENT => true,
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     );
 
     // pdo aanmaken
-    try {
-      $this->dbhandler = new PDO($dsn, $this->dbuser, $this->dbpass, $options);
-    } catch(PDOException $e) {
-      $this->error = $e->getMessage();
-      return $this->error;
-    }
+      try {
+          $this->dbhandler = new PDO($this->dsn, $this->dbuser, $this->dbpass, $this->options);
+      } catch(\PDOException $e) {
+          throw new \PDOException('unable to connect to database');
+      }
   }
+
 
   //query
   public function query($sql) {
-    $this->stmt = $this->dbhandler->prepare($sql);
+      try {
+          $this->stmt = $this->dbhandler->prepare($sql);
+      } catch (\PDOException $e) {
+          throw new \PDOException('Kan item niet toevoegen aan database, probeer het later opnieuw.');
+      }
   }
 
   //Values binden
