@@ -1,4 +1,5 @@
 <?php
+
 require APPROOT . '/views/inc/header.inc.php'; ?>
     <div class="container">
         <div class="row">
@@ -17,7 +18,8 @@ require APPROOT . '/views/inc/header.inc.php'; ?>
                     </div>
                     <div class="form-group">
                         <label for="description">Beschrijving: <sup>*</sup></label>
-                        <textarea name="description" class="form-control form-control-lg <?= (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"><?= ($data['description']) ? $data['description'] : ''; ?></textarea>
+                        <textarea name="description"
+                                  class="form-control form-control-lg <?= (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"><?= ($data['description']) ? $data['description'] : ''; ?></textarea>
                         <span class="invalid-feedback"><?php
                             echo $data['description_err']; ?></span>
                     </div>
@@ -25,14 +27,22 @@ require APPROOT . '/views/inc/header.inc.php'; ?>
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Selecteer</label>
                         </div>
-                        <select name="exerciseFormOption" class="custom-select" id="inputGroupSelect01">
+
+                        <select <?= ($data['exerciseforms']['error'] !== null) ? 'disabled' : ''; ?>
+                                name="exerciseFormOption" class="custom-select" id="inputGroupSelect01">
                             <option selected>Kies een vorm...</option>
                             <?php
-                            foreach ($data['exerciseforms'] as $exerciseform) : ?>
+                            if ($data['exerciseforms']['error'] == null):
+                            foreach ($data['exerciseforms']['exerciseforms'] as $exerciseform) : ?>
                                 <option value="<?= $exerciseform->id ?>"><?= $exerciseform->name ?></option>
                             <?php
-                            endforeach; ?>
+                            endforeach;
+                            endif; ?>
                         </select>
+                        <?php
+                        if ($data['exerciseforms']['error'] !== null): ?>
+                            <span class="invalid-feedback d-block">Er is een fout opgetreden bij het ophalen van de oefening vormen. Probeer het later opnieuw.</span>
+                        <?php endif; ?>
                     </div>
                     <div class="row">
                         <div class="form-group col-6">
@@ -46,14 +56,14 @@ require APPROOT . '/views/inc/header.inc.php'; ?>
                             <label for="sets">Sets: </label>
                             <input type="number" name="sets" class="form-control form-control-lg <?php
                             echo (!empty($data['sets_err'])) ? 'is-invalid' : ''; ?>"><?= ($data['sets']) ? $data['sets'] : ''; ?>
-                        <span class="invalid-feedback"><?php
-                            echo $data['sets_err']; ?></span>
+                            <span class="invalid-feedback"><?php
+                                echo $data['sets_err']; ?></span>
+                        </div>
                     </div>
+                    <input type="submit" class="btn btn-success" value="Submit">
+                </form>
             </div>
-            <input type="submit" class="btn btn-success" value="Submit">
-            </form>
         </div>
-    </div>
     </div>
 
 <?php

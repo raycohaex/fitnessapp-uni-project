@@ -1,6 +1,7 @@
 <?php
 require APPROOT . '/views/inc/header.inc.php'; ?>
     <div class="container">
+
         <div class="row">
             <div class="col-12">
                 <h2>Voeg oefening toe</h2>
@@ -27,19 +28,24 @@ require APPROOT . '/views/inc/header.inc.php'; ?>
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Selecteer</label>
                         </div>
-                        <select name="exerciseFormOption" class="custom-select" id="inputGroupSelect01">
+                        <select <?= ($data['exerciseform']['exerciseforms']['error'] !== NULL) ? 'disabled' : ''; ?> name="exerciseFormOption" class="custom-select" id="inputGroupSelect01">
                             <option>Geen selecte gemaakt...</option>
                             <?php
+                            if($data['exerciseform']['exerciseforms']['errors'] == NULL) :
                             $selected = $data['exerciseform']['selectedExerciseform'][0]->id;
-                            foreach ($data['exerciseform']['exerciseforms'] as $exerciseform) : ?>
+                            foreach ($data['exerciseform']['exerciseforms']['exerciseforms'] as $exerciseform) : ?>
                                 <?php if($exerciseform->id == $selected) : ?>
                                 <option selected value="<?= $exerciseform->id ?>"><?= $exerciseform->name ?></option>
                                 <?php else: ?>
                                 <option value="<?= $exerciseform->id ?>"><?= $exerciseform->name ?></option>
                                 <?php endif; ?>
                             <?php
-                            endforeach; ?>
+                            endforeach;
+                            endif; ?>
                         </select>
+                        <?php if($data['exerciseform']['exerciseforms']['error'] !== NULL): ?>
+                            <span class="invalid-feedback d-block">Er is een fout opgetreden bij het ophalen van de oefening vormen. Probeer het later opnieuw.</span>
+                        <?php endif; ?>
                     </div>
                     <div class="row">
                     <div class="form-group col-6">

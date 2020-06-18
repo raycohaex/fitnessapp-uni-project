@@ -9,7 +9,12 @@ class ExerciseBLL extends ExerciseModel implements IExerciseBLL {
 
     public function __construct(iExerciseDataLayer $dal)
     {
-        $this->exerciseDAL = $dal;
+        try {
+            $this->exerciseDAL = $dal;
+        }
+        catch (\Exception $e) {
+            $e->getMessage();
+        }
     }
 
 
@@ -33,7 +38,21 @@ class ExerciseBLL extends ExerciseModel implements IExerciseBLL {
 
     }
 
-    public function getSingleExercise($id) : object {
-        return $this->exerciseDAL->getExerciseById($id);
+    public function getSingleExercise($id) : array {
+        try {
+            $result = $this->exerciseDAL->getExerciseById($id);
+            return [
+                'exercise'=> $result,
+                'error' => NULL
+            ];
+        } catch (\PDOException $e) {
+            return [
+                'exercise'=> '',
+                'error' => [
+                    'title' => 'Kan oefening niet ophalen',
+                    'description' => 'Deze oefening kan niet worden opgehaald of kan niet worden gevonden. Probeer het later opnieuw.'
+                ]
+            ];
+        }
     }
 }

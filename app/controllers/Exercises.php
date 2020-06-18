@@ -49,24 +49,18 @@ class Exercises extends Controller
 
     public function show($id = NULL): void
     {
-        try {
             $exerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
             $exercise = $this->exerciseBLL->getSingleExercise($id);
-        } catch (\Error $e) {
-            $data = [
-                'error' => [
-                    'title' => 'Oefening niet gevonden',
-                    'description' => 'De opgegeven oefening kan niet worden gevonden.'
-                ]
-            ];
-            $this->view('exercises/error', $data);
-            exit;
-        }
-        $data = [
-            'exercise' => $exercise,
-            'exerciseform' => $exerciseform
-        ];
-        $this->view('exercises/show', $data);
+            if($exercise['error'] !== NULL) {
+                $this->view('exercises/error', $exercise['error']);
+                exit;
+            } else {
+                $data = [
+                    'exercise' => $exercise,
+                    'exerciseform' => $exerciseform
+                ];
+                $this->view('exercises/show', $data);
+            }
     }
 
 
@@ -93,6 +87,20 @@ class Exercises extends Controller
             $selectedExerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
             $exerciseforms = $this->exerciseformBLL->getAllExcerciseforms();
             $exercise = $this->exerciseBLL->getSingleExercise($id);
+            $exercise = $exercise['exercise'];
+            $data = [
+                'id' => $id + 0,
+                'name' => $exercise->name,
+                'description' => $exercise->description,
+                'exerciseform' => [
+                    'exerciseforms' => $exerciseforms,
+                    'selectedExerciseform' => $selectedExerciseform
+                ],
+                'repetitions' => $exercise->repetitions,
+                'sets' => $exercise->sets
+            ];
+
+            $this->view('exercises/edit', $data);
         } catch (\Error $e) {
             $data = [
                 'error' => 'Oefening bestaat niet'
@@ -100,20 +108,6 @@ class Exercises extends Controller
             $this->view('exercises/error', $data);
             exit;
         }
-
-        $data = [
-            'id' => $id,
-            'name' => $exercise->name,
-            'description' => $exercise->description,
-            'exerciseform' => [
-                'exerciseforms' => $exerciseforms,
-                'selectedExerciseform' => $selectedExerciseform
-            ],
-            'repetitions' => $exercise->repetitions,
-            'sets' => $exercise->sets
-        ];
-
-        $this->view('exercises/edit', $data);
     }
 
 

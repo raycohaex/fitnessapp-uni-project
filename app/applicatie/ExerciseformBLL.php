@@ -13,9 +13,21 @@ class ExerciseformBLL implements IExerciseformBLL {
 
     public function getAllExcerciseforms() : array
     {
-        return $this->exerciseformDAL->getAllExerciseforms();
-
-        // verwerk data voor view
+        try {
+            $result = $this->exerciseformDAL->getAllExerciseforms();
+            return [
+                'exerciseforms'=> $result,
+                'error' => NULL
+            ];
+        } catch (\PDOException $e) {
+            return [
+                'exerciseforms'=> '',
+                'error' => [
+                    'title' => 'Kan oefeningen niet ophalen',
+                    'description' => 'Op dit moment kunnen er geen oefeningen worden opgehaald. Probeer het later opnieuw.'
+                ]
+            ];
+        }
     }
 
     public function getExerciseformsByExerciseId($id) : array {

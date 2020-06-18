@@ -5,7 +5,7 @@ require_once('config/config.php');
 
 
 // Laad lib(raries)
-//require_once 'functions/redirecter.php';
+require_once 'functions/redirecter.php';
 //require_once(APPROOT . '/lib/Core.php');
 //require_once(APPROOT . '/lib/Controller.php');
 //require_once(APPROOT . '/lib/Database.php');

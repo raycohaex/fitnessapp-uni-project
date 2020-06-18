@@ -11,7 +11,8 @@ final class ExerciseTest extends TestCase
     public function testCreateExerciseAndValidate(): void
     {
         // arrange
-        $ex = new ExerciseModel(new \app\DAL\ExerciseDataLayer(), 'Benchpress', 'Beschrijving');
+        $stub = $this->createMock(\app\DAL\ExerciseDataLayer::class);
+        $ex = new ExerciseModel($stub, 'Benchpress', 'Beschrijving');
 
         //act
         $result = $ex->validateExercise();
@@ -23,7 +24,8 @@ final class ExerciseTest extends TestCase
     public function testCreateExerciseAndValidateEmptyTitle(): void
     {
         // arrange
-        $ex = new ExerciseModel(new \app\DAL\ExerciseDataLayer(),'', 'Beschrijving');
+        $stub = $this->createMock(\app\DAL\ExerciseDataLayer::class);
+        $ex = new ExerciseModel($stub,'', 'Beschrijving');
 
         //act
         $result = $ex->validateExercise();
@@ -35,7 +37,8 @@ final class ExerciseTest extends TestCase
     public function testCreateExerciseAndValidateEmptyDescription(): void
     {
         // arrange
-        $ex = new ExerciseModel(new \app\DAL\ExerciseDataLayer(), 'Benchpress', '');
+        $stub = $this->createMock(\app\DAL\ExerciseDataLayer::class);
+        $ex = new ExerciseModel($stub, 'Benchpress', '');
 
         //act
         $result = $ex->validateExercise();
@@ -47,7 +50,8 @@ final class ExerciseTest extends TestCase
     public function testCreateExerciseAndValidateEmptyAllFields(): void
     {
         // arrange
-        $ex = new ExerciseModel(new \app\DAL\ExerciseDataLayer(), '', '');
+        $stub = $this->createMock(\app\DAL\ExerciseDataLayer::class);
+        $ex = new ExerciseModel($stub, '', '');
 
         //act
         $result = $ex->validateExercise();
@@ -55,6 +59,24 @@ final class ExerciseTest extends TestCase
         //assert
         $this->assertFalse($result['valid']);
     }
+
+    public function testThatAddReturntypeIsInt()
+    {
+        // validate that return type after adding an exercise is an int.
+        // Int returned will be 0 since it doesnt contain a database row
+        // arrange
+        $stub = $this->createMock(\app\DAL\ExerciseDataLayer::class);
+
+        //act
+        $exercise = new ExerciseModel($stub, 'benchpress', 'blablabla', 5, 5);
+        $result = $exercise->addExercise();
+
+        //assert
+        $this->assertIsInt($result);
+    }
+
+    
+
 
 
 }

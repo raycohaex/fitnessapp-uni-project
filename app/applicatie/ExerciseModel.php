@@ -18,7 +18,7 @@ class ExerciseModel implements IExerciseModel
         $this->name = $name;
         $this->description = $description;
         if($id !== NULL ) {
-            $this->id = $id;
+            $this->id = $id + 0;
         }
         if($reps !== NULL ) {
             $this->repetitions = $reps;
