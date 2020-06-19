@@ -47,20 +47,24 @@ class Exercises extends Controller
     }
 
 
-    public function show($id = NULL): void
+    public function show($id): void
     {
-            $exerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
-            $exercise = $this->exerciseBLL->getSingleExercise($id);
-            if($exercise['error'] !== NULL) {
-                $this->view('exercises/error', $exercise['error']);
-                exit;
-            } else {
-                $data = [
-                    'exercise' => $exercise,
-                    'exerciseform' => $exerciseform
-                ];
-                $this->view('exercises/show', $data);
-            }
+        $id = intval($id);
+        if(is_string($id)) {
+            $id = 0;
+        }
+        $exerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
+        $exercise = $this->exerciseBLL->getSingleExercise($id);
+        if($exercise['error'] !== NULL) {
+            $this->view('exercises/error', $exercise['error']);
+            exit;
+        } else {
+            $data = [
+                'exercise' => $exercise,
+                'exerciseform' => $exerciseform
+            ];
+            $this->view('exercises/show', $data);
+        }
     }
 
 
@@ -81,12 +85,19 @@ class Exercises extends Controller
     }
 
 
-    public function edit(int $id = NULL): void
+    public function edit($id): void
     {
-        try {
-            $selectedExerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
-            $exerciseforms = $this->exerciseformBLL->getAllExcerciseforms();
-            $exercise = $this->exerciseBLL->getSingleExercise($id);
+        $id = intval($id);
+        if(is_string($id)) {
+            $id = 0;
+        }
+        $selectedExerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
+        $exerciseforms = $this->exerciseformBLL->getAllExcerciseforms();
+        $exercise = $this->exerciseBLL->getSingleExercise($id);
+        if($exercise['error'] !== NULL) {
+            $this->view('exercises/error', $exercise['error']);
+            exit;
+        } else {
             $exercise = $exercise['exercise'];
             $data = [
                 'id' => $id + 0,
@@ -101,12 +112,6 @@ class Exercises extends Controller
             ];
 
             $this->view('exercises/edit', $data);
-        } catch (\Error $e) {
-            $data = [
-                'error' => 'Oefening bestaat niet'
-            ];
-            $this->view('exercises/error', $data);
-            exit;
         }
     }
 
@@ -129,12 +134,9 @@ class Exercises extends Controller
             $validateExercise = $exerciseModel->validateExercise();
 
             if ($validateExercise['valid'] == true) {
-                $result = $exerciseModel->addExercise();
+                $result = $exerciseModel->addExercise($exerciseFormId);
                 // if successful
                 if ($result !== 0) {
-
-                    $this->exerciseformBLL->joinExerciseWithExerciseform($exerciseFormId, $result);
-
                     redirect('index');
                 }
             } else {
@@ -172,9 +174,9 @@ class Exercises extends Controller
             $validateExercise = $editExercise->validateExercise();
 
             if ($validateExercise['valid'] == true) {
-                $result = $editExercise->patchExercise();
+                $result = $editExercise->patchExercise($exerciseFormId);
                 if ($result !== 0) {
-                    $this->exerciseformBLL->joinExerciseWithExerciseform($exerciseFormId, $result);
+//                    $this->exerciseformBLL->joinExerciseWithExerciseform($exerciseFormId, $result);
                     redirect('index');
                 }
             } else {

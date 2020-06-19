@@ -23,17 +23,19 @@ class ExerciseDataLayer extends Database implements IExerciseDataLayer
 
     public function getExercises(): array
     {
+        /* return an array of all exercises */
         try {
             $this->db->query('SELECT `id`, `name`, `description`, `repetitions`, `sets` FROM exercises');
             return $this->db->resultSet();
         } catch (PDOException $e) {
-            throw new PDOException('kan oefeningen niet ophalen uit de database.');
+            throw new PDOException('Kan geen records vinden');
         }
     }
 
 
-    public function getExerciseById($id): object
+    public function getExerciseById(int $id): object
     {
+        /* return an object of an exercise based on ID */
         try {
             $this->db->query(
                 'SELECT `id`, `name`, `description`, `repetitions`, `sets` FROM `exercises` WHERE id = :id'
@@ -41,19 +43,20 @@ class ExerciseDataLayer extends Database implements IExerciseDataLayer
             $this->db->bind(':id', $id);
             $result = $this->db->single();
 
-            if($result === false) {
+            if ($result === false) {
                 throw new PDOException('Kan geen records vinden');
             }
 
             return $result;
         } catch (PDOException $e) {
-            throw new PDOException('kan oefening niet ophalen uit de database.');
+            throw new PDOException('Kan geen records vinden: ' . $e->getMessage());
         }
     }
 
 
-    public function addExercise($data): int
+    public function addExercise(array $data): int
     {
+        /* Add an exercise and return the added row id as int */
         $this->db->query(
             'INSERT INTO `exercises` (`name`, `description`, `repetitions`, `sets`) VALUES (:name, :description, :repetitions, :sets)'
         );
@@ -75,8 +78,9 @@ class ExerciseDataLayer extends Database implements IExerciseDataLayer
     }
 
 
-    public function patchExercise($data): bool
+    public function patchExercise(array $data): bool
     {
+        /* edit an exercise return a true or false */
         $this->db->query(
             'UPDATE `exercises` SET name=:name, description=:description, repetitions=:repetitions, sets=:sets WHERE id=:id'
         );

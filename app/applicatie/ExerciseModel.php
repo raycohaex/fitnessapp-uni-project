@@ -1,6 +1,10 @@
 <?php
+
 declare(strict_types=1);
+
 namespace app\applicatie;
+
+use app\DAL\ExerciseformDataLayer;
 use app\DAL\IExerciseDataLayer;
 
 class ExerciseModel implements IExerciseModel
@@ -12,31 +16,56 @@ class ExerciseModel implements IExerciseModel
     private int $sets;
     private int $id;
 
-    public function __construct(IExerciseDataLayer $dal, string $name, string $description, int $reps = NULL, int $sets = NULL, $id = NULL)
-    {
+    public function __construct(
+        IExerciseDataLayer $dal,
+        string $name,
+        string $description,
+        int $reps = null,
+        int $sets = null,
+        $id = null
+    ) {
         $this->exerciseDAL = $dal;
         $this->name = $name;
         $this->description = $description;
-        if($id !== NULL ) {
+        if ($id !== null) {
             $this->id = $id + 0;
         }
-        if($reps !== NULL ) {
+        if ($reps !== null) {
             $this->repetitions = $reps;
         }
-        if($sets !== NULL ) {
+        if ($sets !== null) {
             $this->sets = $sets;
         }
     }
 
     // return methods
-    public function getExerciseName() { return $this->name; }
-    public function getExerciseDescription() { return $this->description; }
-    public function getExerciseId() { return $this->id; }
-    public function getExerciseRepetitions() { return $this->repetitions; }
-    public function getExerciseSets() { return $this->sets; }
+    public function getExerciseName()
+    {
+        return $this->name;
+    }
+
+    public function getExerciseDescription()
+    {
+        return $this->description;
+    }
+
+    public function getExerciseId()
+    {
+        return $this->id;
+    }
+
+    public function getExerciseRepetitions()
+    {
+        return $this->repetitions;
+    }
+
+    public function getExerciseSets()
+    {
+        return $this->sets;
+    }
 
 
-    public function addExercise() : int
+    public function addExercise(int $exerciseFormJoinID = 0): int
     {
         try {
             $data = [
@@ -45,13 +74,19 @@ class ExerciseModel implements IExerciseModel
                 'repetitions' => $this->repetitions,
                 'sets' => $this->sets
             ];
-            return $this->exerciseDAL->addExercise($data);
-        }
-        catch (Exception $e) {
+
+            $result = $this->exerciseDAL->addExercise($data);
+
+            if ($exerciseFormJoinID !== 0) {
+                $exerciseformBLL = new ExerciseformBLL(new ExerciseformDataLayer());
+                $exerciseformBLL->joinExerciseWithExerciseform($exerciseFormJoinID, $result);
+            }
+
+            return $result;
+        } catch (Exception $e) {
             return 0;
         }
     }
-
 
 
     public function validateExercise(): array
@@ -77,7 +112,8 @@ class ExerciseModel implements IExerciseModel
         return $validationData;
     }
 
-    public function patchExercise() : bool {
+    public function patchExercise(int $exerciseFormJoinID = 0): bool
+    {
         try {
             $data = [
                 'name' => $this->name,
@@ -87,11 +123,14 @@ class ExerciseModel implements IExerciseModel
                 'id' => $this->id
             ];
             $this->exerciseDAL->patchExercise($data);
+            if ($exerciseFormJoinID !== 0) {
+                $exerciseformBLL = new ExerciseformBLL(new ExerciseformDataLayer());
+                $exerciseformBLL->patchExerciseWithExerciseform($exerciseFormJoinID, $this->id);
+            }
+
             return true;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
-
     }
 }

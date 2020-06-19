@@ -60,7 +60,7 @@ final class ExerciseTest extends TestCase
         $this->assertFalse($result['valid']);
     }
 
-    public function testThatAddReturntypeIsInt()
+    public function testThatAddReturntypeIsIntFromAddingExercise()
     {
         // validate that return type after adding an exercise is an int.
         // Int returned will be 0 since it doesnt contain a database row
@@ -74,6 +74,7 @@ final class ExerciseTest extends TestCase
         //assert
         $this->assertIsInt($result);
     }
+
 
     
 

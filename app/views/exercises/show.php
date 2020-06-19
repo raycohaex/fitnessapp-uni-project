@@ -9,7 +9,7 @@ include(APPROOT . '/views/inc/header.inc.php'); ?>
                     <div class="d-flex align-center">
                         <h1 class="card-title"><?= $exercise->name ?></h1>
                         <ul class="list-unstyled d-flex ml-3">
-                        <?php foreach($data['exerciseform'] as $exerciseform) : ?>
+                        <?php foreach($data['exerciseform']['exerciseforms'] as $exerciseform) : ?>
                             <li class="d-flex align-center"><a class="text-secondary my-auto" href="#selected=<?=$exerciseform->id?>"><?=$exerciseform->name?></a></li>
                         <?php endforeach; ?>
                         </ul>

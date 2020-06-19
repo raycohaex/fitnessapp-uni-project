@@ -4,7 +4,7 @@ namespace app\DAL;
 interface IExerciseDataLayer
 {
     public function getExercises();
-    public function getExerciseById($id);
-    public function addExercise($data);
-    public function patchExercise($data);
+    public function getExerciseById(int $id);
+    public function addExercise(array $data);
+    public function patchExercise(array $data);
 }

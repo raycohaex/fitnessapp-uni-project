@@ -3,5 +3,5 @@ namespace app\applicatie;
 
 interface IExerciseBLL {
     public function getAllExercises();
-    public function getSingleExercise($id);
+    public function getSingleExercise(int $id);
 }
