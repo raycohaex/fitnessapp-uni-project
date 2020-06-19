@@ -100,7 +100,7 @@ class Exercises extends Controller
         } else {
             $exercise = $exercise['exercise'];
             $data = [
-                'id' => $id + 0,
+                'id' => $id,
                 'name' => $exercise->name,
                 'description' => $exercise->description,
                 'exerciseform' => [
@@ -158,6 +158,10 @@ class Exercises extends Controller
 
     public function patch($id): void
     {
+        $id = intval($id);
+        if(is_string($id)) {
+            $id = 0;
+        }
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -167,6 +171,8 @@ class Exercises extends Controller
             $repetitions = (is_numeric($_POST['repetitions']) ? (int)$_POST['repetitions'] : 0);
             $sets = (is_numeric($_POST['sets']) ? (int)$_POST['sets'] : 0);
 
+            $selectedExerciseform = $this->exerciseformBLL->getExerciseformsByExerciseId($id);
+            $exerciseforms = $this->exerciseformBLL->getAllExcerciseforms();
 
             $editExercise = new ExerciseModel(new ExerciseDataLayer(), $name, $description, $repetitions, $sets, $id);
 
@@ -176,7 +182,6 @@ class Exercises extends Controller
             if ($validateExercise['valid'] == true) {
                 $result = $editExercise->patchExercise($exerciseFormId);
                 if ($result !== 0) {
-//                    $this->exerciseformBLL->joinExerciseWithExerciseform($exerciseFormId, $result);
                     redirect('index');
                 }
             } else {
@@ -186,8 +191,17 @@ class Exercises extends Controller
                 if ($validateExercise['nameErr']) {
                     $data['name_err'] = $validateExercise['nameErr'];
                 }
-                $data['name'] = $editExercise->getExerciseName();
-                $data['description'] = $editExercise->getExerciseDescription();
+                $data = [
+                    'id' => $id,
+                    'name' => $editExercise->getExerciseName(),
+                    'description' => $editExercise->getExerciseDescription(),
+                    'exerciseform' => [
+                        'exerciseforms' => $exerciseforms,
+                        'selectedExerciseform' => $selectedExerciseform
+                    ],
+                    'repetitions' => $editExercise->getExerciseRepetitions(),
+                    'sets' => $editExercise->getExerciseSets()
+                ];
 
                 $this->view('exercises/edit', $data);
             }

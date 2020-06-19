@@ -22,7 +22,7 @@ class ExerciseModel implements IExerciseModel
         string $description,
         int $reps = null,
         int $sets = null,
-        $id = null
+        int $id = null
     ) {
         $this->exerciseDAL = $dal;
         $this->name = $name;
@@ -67,7 +67,6 @@ class ExerciseModel implements IExerciseModel
 
     public function addExercise(int $exerciseFormJoinID = 0): int
     {
-        try {
             $data = [
                 'name' => $this->name,
                 'description' => $this->description,
@@ -82,10 +81,11 @@ class ExerciseModel implements IExerciseModel
                 $exerciseformBLL->joinExerciseWithExerciseform($exerciseFormJoinID, $result);
             }
 
-            return $result;
-        } catch (Exception $e) {
-            return 0;
-        }
+            if($result > 0){
+                return $result;
+            } else {
+                return 0;
+            }
     }
 
 
@@ -114,7 +114,6 @@ class ExerciseModel implements IExerciseModel
 
     public function patchExercise(int $exerciseFormJoinID = 0): bool
     {
-        try {
             $data = [
                 'name' => $this->name,
                 'description' => $this->description,
@@ -122,15 +121,16 @@ class ExerciseModel implements IExerciseModel
                 'sets' => $this->sets,
                 'id' => $this->id
             ];
-            $this->exerciseDAL->patchExercise($data);
+
             if ($exerciseFormJoinID !== 0) {
                 $exerciseformBLL = new ExerciseformBLL(new ExerciseformDataLayer());
                 $exerciseformBLL->patchExerciseWithExerciseform($exerciseFormJoinID, $this->id);
             }
 
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
+            if($this->exerciseDAL->patchExercise($data)) {
+                return true;
+            } else {
+                return false;
+            }
     }
 }
