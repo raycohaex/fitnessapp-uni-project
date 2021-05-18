@@ -74,11 +74,4 @@ final class ExerciseTest extends TestCase
         //assert
         $this->assertIsInt($result);
     }
-
-
-    
-
-
-
 }
-
