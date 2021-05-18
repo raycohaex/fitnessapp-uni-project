@@ -6,39 +6,50 @@
 ** Waardes binden aan statements
 ** Rows en results doorgeven.
 */
+declare(strict_types=1);
+namespace app\lib;
+use mysql_xdevapi\Exception;
+use \PDO;
+use \PDOStatement;
 
 class Database {
-  private $dbhost = DB_HOST;
-  private $dbuser = DB_USER;
-  private $dbpass = DB_PASS;
-  private $dbname = DB_NAME;
+    private string $dbhost = DB_HOST;
+    private string $dbuser = DB_USER;
+    private string $dbpass = DB_PASS;
+    private string $dbname = DB_NAME;
 
-  private $dbhandler;
-  private $stmt;
-  private $error;
+    private PDO $dbhandler;
+    private PDOStatement $stmt;
+    private string $error = "";
 
-  public function __construct() 
+    private string $dsn;
+
+  public function __construct()
   {
     // dsn = data source name
-    $dsn = 'mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname;
+    $this->dsn = 'mysql:host=' . $this->dbhost . ';dbname=' . $this->dbname;
     // https://www.php.net/manual/en/pdo.setattribute.php
-    $options = array(
+    $this->options = array(
       PDO::ATTR_PERSISTENT => true,
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     );
 
     // pdo aanmaken
-    try {
-      $this->dbhandler = new PDO($dsn, $this->dbuser, $this->dbpass, $options);
-    } catch(PDOException $e) {
-      $this->error = $e->getMessage();
-      echo $this->error;
-    }
+      try {
+          $this->dbhandler = new PDO($this->dsn, $this->dbuser, $this->dbpass, $this->options);
+      } catch(\PDOException $e) {
+          throw new \PDOException('unable to connect to database');
+      }
   }
+
 
   //query
   public function query($sql) {
-    $this->stmt = $this->dbhandler->prepare($sql);
+      try {
+          $this->stmt = $this->dbhandler->prepare($sql);
+      } catch (\PDOException $e) {
+          throw new \PDOException('Kan item niet toevoegen aan database, probeer het later opnieuw.');
+      }
   }
 
   //Values binden
@@ -65,6 +76,12 @@ class Database {
     return $this->stmt->execute();
   }
 
+  // return ID of inserted row, important for joining
+  public function lastInsertId()
+  {
+      return $this->dbhandler->lastInsertId();
+  }
+
   // results array
   public function resultSet() {
     $this->execute();
@@ -72,6 +89,7 @@ class Database {
   }
 
   public function single() {
+    $this->execute();
     return $this->stmt->fetch(PDO::FETCH_OBJ);
   }
 
