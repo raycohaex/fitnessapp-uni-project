@@ -1,6 +1,7 @@
 # Fitnessapp
 
-This is a proof of concept I made for uni. It's a crud system that let's you add, edit, read and delete exercises. I made this project in early 2020.
+This is a proof of concept I made for uni. It's a crud system that lets you add, edit, read and delete exercises. This was made in early 2020.
+I made everything in this project from scratch. The goal was to learn vanilla PHP so I could move towards using a framework with a better understanding of MVC's and architecture. This project shows serveral outdated practises I no longer apply.
 
 ## Installation
 
@@ -9,6 +10,18 @@ This project uses composer for certain packages.
 ```bash
 composer install
 ```
+## Structure
+
+- **/public** contains all the JavaScript and Css and an entry file.
+- **/app** 
+  - **app/DAL** contains all the datalayer related files 
+  - **app/applicatie** contains all the logic/business layer classes and interfaces
+  - **app/DAL** contains all the datalayer related classes and interfaces
+  - **app/config** contains the database configuration (I no longer do it this way, i use .env files now)
+  - **app/controllers** part of the view layer, contains api routes and talks to the logic/business layer.
+  - **app/functions** part of the view layer, contains general functions
+  - **app/errors** part of the view layer, contains templates for the front-end
+  - **app/lib** contains base classes and the engine for routing
 
 ## Documentation
 
