@@ -1,7 +1,7 @@
 # Fitnessapp
 
 This is a proof of concept I made for uni. It's a crud system that lets you add, edit, read and delete exercises. This was made in early 2020.
-I made everything in this project from scratch. The goal was to learn vanilla PHP so I could move towards using a framework with a better understanding of MVC's and architecture. This project shows serveral outdated practises I no longer apply.
+I made everything in this project from scratch. The goal was to learn vanilla PHP so I could move towards using a framework with a better understanding of MVC's and architecture. However, this project shows serveral outdated practises I no longer apply such as the use of no .env file.
 
 ## Installation
 
